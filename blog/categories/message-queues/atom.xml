@@ -4,7 +4,7 @@
   <title><![CDATA[Category: message queues | Drinkin gasoline and wine]]></title>
   <link href="http://gleicon.github.com/blog/categories/message-queues/atom.xml" rel="self"/>
   <link href="http://gleicon.github.com/"/>
-  <updated>2012-03-04T21:21:58-03:00</updated>
+  <updated>2012-03-04T21:33:27-03:00</updated>
   <id>http://gleicon.github.com/</id>
   <author>
     <name><![CDATA[Gleicon]]></name>
@@ -25,17 +25,69 @@
 <p>Built usually over a messaging channel, these frameworks are usually adapted for a set of tasks.
 As it wouldn't be different, some of them had a lot more than I needed, and the frameworks for Python were divided between trying to reimplement Akka or completely different concept.</p>
 
-<p>I took some time out to build <a href="http://github.com/gleicon/mure">Mure</a> to learn more about kombu, a multi-transport library for python. It's a really simple actor library. For example:</p>
+<p>I took some time out to build <a href="http://github.com/gleicon/mure">Mure</a> to learn more about kombu, a multi-transport library for python. It's a really simple actor library.</p>
 
-<p>&lt;% gist 1975450 %></p>
+<p><div><script src='https://gist.github.com/1975450.js?file='></script>
+<noscript><pre><code>   from mure.core import connect, disconnect, worker, send_message             
+    from time import sleep                                                      
+                                                                                
+    @worker('/workers/delicious')                                               
+    def a_worker(message):                                                      
+        print &quot;received: %s&quot; % message                                          
+        send_message('/workers/jazz', 'd-d-d-dance')                            
+                                                                                
+    @worker('/workers/jazz')                                                    
+    def another_worker(message):                                                
+        print &quot;received2: %s&quot; % message                                         
+        send_message('/workers/delicious', &quot;saaaap&quot;)                            
+                                                                                
+    @worker('/workers/delicious')                                               
+    def third_worker(message):                                                  
+        print &quot;the other worker received: %s&quot; % message                         
+                                                                                
+    if __name__ == &quot;__main__&quot;:                                                  
+        connect()                                                               
+        send_message('/workers/jazz', 'let it start')                           
+        sleep(1)                                                                
+        disconnect()      </code></pre></noscript></div>
+</p>
 
 <p>The decorator @worker() says that each time that a message to the queue named after the string arrives, the function might be executed having the message as parameter.</p>
 
 <p><img src="images/mure_architecture.png" title="Architecture for Mure" ></p>
 
-<p>After fidling with <a href="https://github.com/jesusabdullah/pyee">pyee</a>, I've implemented an EventEmitter on top of it. The syntax is the same as node.js, but it's a distributed event emitter:</p>
+<p>After fidling with <a href="https://github.com/jesusabdullah/pyee">pyee</a>, I've implemented an EventEmitter on top of it. The syntax is the same as node.js, but it's a distributed event emitter.</p>
 
-<p>&lt;% gist 1975438 %></p>
+<p><div><script src='https://gist.github.com/1975438.js?file='></script>
+<noscript><pre><code>from mure.dee import DistEventEmitter                                                                                                                                             
+import os, json, time                                                           
+from gevent import sleep, spawn                                                 
+                                                                                
+dbus = DistEventEmitter()                                                       
+                                                                                
+def producer():                                                                 
+    count =0                                                                    
+    while(True):                                                                
+        count = count +1                                                        
+        print count                                                             
+        dbus.emit(&quot;message&quot;, &quot;hnam %d&quot; % count)                                 
+        sleep(5)                                                                
+                                                                                
+                                                                                
+def join_listener(msg):                                                         
+    print &quot;%s&quot; % msg                                                            
+                                                                                
+def msg_listener(msg):                                                          
+    print &quot;received message: %s&quot; % msg                                          
+                                                                                
+def main():                                                                     
+    dbus.emit('join', &quot;oeam&quot;)                                                   
+    dbus.on('message', msg_listener)                                            
+    producer()                                                                  
+                                                                                
+if __name__ == &quot;__main__&quot;:                                                      
+    main()</code></pre></noscript></div>
+</p>
 ]]></content>
   </entry>
   
