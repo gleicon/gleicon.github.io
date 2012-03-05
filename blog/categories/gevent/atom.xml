@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: gevent | Drinkin gasoline and wine]]></title>
+  <link href="http://gleicon.github.com/blog/categories/gevent/atom.xml" rel="self"/>
+  <link href="http://gleicon.github.com/"/>
+  <updated>2012-03-04T21:21:58-03:00</updated>
+  <id>http://gleicon.github.com/</id>
+  <author>
+    <name><![CDATA[Gleicon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Agents and Event Listeners for Python]]></title>
+    <link href="http://gleicon.github.com/blog/2012/03/04/agents-and-event-listeners-for-python/"/>
+    <updated>2012-03-04T19:03:00-03:00</updated>
+    <id>http://gleicon.github.com/blog/2012/03/04/agents-and-event-listeners-for-python</id>
+    <content type="html"><![CDATA[<p>When modeling a distributed system one might stumble in the Actor model, implemented in one way or another - be it natively on Erlang or a complete library as Akka.</p>
+
+<p>There is a lot of discussion over concurrency models, but regardless the Actor model serves well to break a task between different processes/servers.</p>
+
+<p>Built usually over a messaging channel, these frameworks are usually adapted for a set of tasks.
+As it wouldn't be different, some of them had a lot more than I needed, and the frameworks for Python were divided between trying to reimplement Akka or completely different concept.</p>
+
+<p>I took some time out to build <a href="http://github.com/gleicon/mure">Mure</a> to learn more about kombu, a multi-transport library for python. It's a really simple actor library. For example:</p>
+
+<p>&lt;% gist 1975450 %></p>
+
+<p>The decorator @worker() says that each time that a message to the queue named after the string arrives, the function might be executed having the message as parameter.</p>
+
+<p><img src="images/mure_architecture.png" title="Architecture for Mure" ></p>
+
+<p>After fidling with <a href="https://github.com/jesusabdullah/pyee">pyee</a>, I've implemented an EventEmitter on top of it. The syntax is the same as node.js, but it's a distributed event emitter:</p>
+
+<p>&lt;% gist 1975438 %></p>
+]]></content>
+  </entry>
+  
+</feed>

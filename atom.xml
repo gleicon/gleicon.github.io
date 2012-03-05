@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Drinkin gasoline and wine]]></title>
+  <link href="http://gleicon.github.com/atom.xml" rel="self"/>
+  <link href="http://gleicon.github.com/"/>
+  <updated>2012-03-04T21:21:58-03:00</updated>
+  <id>http://gleicon.github.com/</id>
+  <author>
+    <name><![CDATA[Gleicon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Agents and Event Listeners for Python]]></title>
+    <link href="http://gleicon.github.com/blog/2012/03/04/agents-and-event-listeners-for-python/"/>
+    <updated>2012-03-04T19:03:00-03:00</updated>
+    <id>http://gleicon.github.com/blog/2012/03/04/agents-and-event-listeners-for-python</id>
+    <content type="html"><![CDATA[<p>When modeling a distributed system one might stumble in the Actor model, implemented in one way or another - be it natively on Erlang or a complete library as Akka.</p>
+
+<p>There is a lot of discussion over concurrency models, but regardless the Actor model serves well to break a task between different processes/servers.</p>
+
+<p>Built usually over a messaging channel, these frameworks are usually adapted for a set of tasks.
+As it wouldn&#8217;t be different, some of them had a lot more than I needed, and the frameworks for Python were divided between trying to reimplement Akka or completely different concept.</p>
+
+<p>I took some time out to build <a href="http://github.com/gleicon/mure">Mure</a> to learn more about kombu, a multi-transport library for python. It&#8217;s a really simple actor library. For example:</p>
+
+<p>&lt;% gist 1975450 %></p>
+
+<p>The decorator @worker() says that each time that a message to the queue named after the string arrives, the function might be executed having the message as parameter.</p>
+
+<p><img src="images/mure_architecture.png" title="Architecture for Mure" ></p>
+
+<p>After fidling with <a href="https://github.com/jesusabdullah/pyee">pyee</a>, I&#8217;ve implemented an EventEmitter on top of it. The syntax is the same as node.js, but it&#8217;s a distributed event emitter:</p>
+
+<p>&lt;% gist 1975438 %></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Riemann client for python]]></title>
+    <link href="http://gleicon.github.com/blog/2012/03/04/reimann-client-for-python/"/>
+    <updated>2012-03-04T18:34:00-03:00</updated>
+    <id>http://gleicon.github.com/blog/2012/03/04/reimann-client-for-python</id>
+    <content type="html"><![CDATA[<p>In the search for the right backend to implement a metrics suited to my projects, I saw that <a href="http://aphyr.github.com/riemann">Riemann</a> (event server built on Closure) would save time by already having all kinds of math related to means, percentiles and a flexible configuration.</p>
+
+<p>The protocol uses Google&#8217;s Protocol Buffers, but it&#8217;s very simple (I was able to go from 0 to a simple driver in less than 4 hours - including the protobuf part).
+Basic functionality as sending metrics and querying are ready, but the driver still needs polishing - include a connection pool, and a twisted version. As it is right now, it works great with gevent apps.</p>
+
+<p>A basic send/query app would be like this:</p>
+
+<pre><code>from riemann import RiemannClient
+
+def main():
+    rc = RiemannClient()
+    rc.send({'host':'127.0.0.1', 'service': 'www', 'state': 'down', 'metric_f': 10000})
+    res = rc.query('host')
+    print res
+    for e in res.events: print e.host
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+
+<p>It supports both tcp and udp transports and includes the proper classes translated from protobuf spec to python. Requires google&#8217;s protobuf library. The repo is on github <a href="https://github.com/gleicon/pyriemann">pyriemann</a>. There is an examples directory with riemann_health.py, translated from the ruby version to python.</p>
+]]></content>
+  </entry>
+  
+</feed>
