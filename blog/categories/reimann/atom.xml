@@ -4,7 +4,7 @@
   <title><![CDATA[Category: reimann | Drinkin gasoline and wine]]></title>
   <link href="http://gleicon.github.com/blog/categories/reimann/atom.xml" rel="self"/>
   <link href="http://gleicon.github.com/"/>
-  <updated>2012-03-04T21:33:27-03:00</updated>
+  <updated>2012-03-04T21:39:20-03:00</updated>
   <id>http://gleicon.github.com/</id>
   <author>
     <name><![CDATA[Gleicon]]></name>
@@ -25,18 +25,19 @@ Basic functionality as sending metrics and querying are ready, but the driver st
 
 <p>A basic send/query app would be like this:</p>
 
-<pre><code>from riemann import RiemannClient
-
-def main():
-    rc = RiemannClient()
+<p><div><script src='https://gist.github.com/1975656.js?file='></script>
+<noscript><pre><code>from riemann import RiemannClient                                                                                                                                                 
+                                                                                
+def main():                                                                     
+    rc = RiemannClient()                                                        
     rc.send({'host':'127.0.0.1', 'service': 'www', 'state': 'down', 'metric_f': 10000})
-    res = rc.query('host')
-    print res
-    for e in res.events: print e.host
-
-if __name__ == '__main__':
-    main()
-</code></pre>
+    res = rc.query('host')                                                      
+    print res                                                                   
+    for e in res.events: print e.host                                           
+                                                                                
+if __name__ == '__main__':                                                      
+    main()     </code></pre></noscript></div>
+</p>
 
 <p>It supports both tcp and udp transports and includes the proper classes translated from protobuf spec to python. Requires google's protobuf library. The repo is on github <a href="https://github.com/gleicon/pyriemann">pyriemann</a>. There is an examples directory with riemann_health.py, translated from the ruby version to python.</p>
 ]]></content>
