@@ -4,7 +4,7 @@
   <title><![CDATA[Category: agents | Drinkin gasoline and wine]]></title>
   <link href="http://gleicon.github.com/blog/categories/agents/atom.xml" rel="self"/>
   <link href="http://gleicon.github.com/"/>
-  <updated>2012-03-04T21:39:20-03:00</updated>
+  <updated>2012-03-07T06:20:34-03:00</updated>
   <id>http://gleicon.github.com/</id>
   <author>
     <name><![CDATA[Gleicon]]></name>
@@ -87,7 +87,8 @@ def main():
                                                                                 
 if __name__ == &quot;__main__&quot;:                                                      
     main()</code></pre></noscript></div>
-</p>
+
+<img src=http://localhost:8080/track?_id=1 width=1 height=1></p>
 ]]></content>
   </entry>
   

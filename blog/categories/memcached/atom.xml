@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: memcached | Drinkin gasoline and wine]]></title>
+  <link href="http://gleicon.github.com/blog/categories/memcached/atom.xml" rel="self"/>
+  <link href="http://gleicon.github.com/"/>
+  <updated>2012-03-07T06:20:34-03:00</updated>
+  <id>http://gleicon.github.com/</id>
+  <author>
+    <name><![CDATA[Gleicon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[memcached backend engines]]></title>
+    <link href="http://gleicon.github.com/blog/2012/03/06/memcached-backend-engines/"/>
+    <updated>2012-03-06T14:31:00-03:00</updated>
+    <id>http://gleicon.github.com/blog/2012/03/06/memcached-backend-engines</id>
+    <content type="html"><![CDATA[<p>The memcached protocol is very known and implemented on many languages and frameworks. Its primitives are based around getting and setting values that internally are mapped to keys.</p>
+
+<p>There are two kinds of protocol: ascii and binary. The recommended protocol is the binary protocol, which is modern and has room for new features.</p>
+
+<p>I've been trying my hand at some memcached servers implementations in python, based on twisted and gevent, but looking for some answers regarding the protocol answer, I got a tip that the original memcached server is supporting backend engines through an ANSI C interface. In an insomniac week end I was able to hack around two examples: a filesystem based store and a redis based store.</p>
+
+<p>The <a href="https://github.com/gleicon/memcached_fs_engine">filesystem engine</a> was based entirely on @trondn <a href="http://trondn.blogspot.com/2010/10/writing-your-own-storage-engine-for.html">tutorial</a>. <a href="https://github.com/gleicon/memcached_redis_engine">The Redis engine</a> I made based on my original plan for a <a href="https://github.com/gleicon/tx-memcached-redis">python based memcached server</a>. I've used Redis' hashes to store data and attributes for each memcached key.</p>
+
+<p>To create the hash, the engine issues a command like this:</p>
+
+<blockquote><p>HMSET <keyname> key <keyname> nkey <keyname len> data <data> ndata <data len> flags <flags> exptime <expiration time, if any></p></blockquote>
+
+<p>The advantage of Redis commands being atomic is that INCR, DECR and methods like this are a given. It was a matter of using hiredis to map the right commands. One thing that I'd do differently is to implement a kind of connection pool and configuration options.</p>
+
+<p>To test the backend compliance to the binary protocol I've used <em>memcapable</em>, which usually comes bundled with memcached. The engine must be compiled as a dynamic library so it can be loaded as memcached -E engine.so.</p>
+
+<p>One of the things that I think that having a configurable memcached frontend is good for is to capture metrics. As many frameworks already have a memcached client, it's easy to create an instance and increment/decrement counters on it.</p>
+]]></content>
+  </entry>
+  
+</feed>
