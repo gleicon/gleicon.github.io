@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Drinkin gasoline and wine</title>
+  <title>On that message queue... - Drinkin gasoline and wine</title>
   <meta name="author" content="Gleicon">
 
   
-  <meta name="description" content="Blog Archive 2012 On that message queue&#8230;
-Mar 07 2012 posted in broker, message queue, redis, restmq memcached backend engines
-Mar 06 2012 &hellip;">
+  <meta name="description" content="&#8230;that you are trying to do with Redis, the answer is NO. Not by any issue with Redis (which I use in a lot of projects and it&#8217;s a fine &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ Mar 06 2012 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://gleicon.github.com/blog/archives">
+  <link rel="canonical" href="http://gleicon.github.com/blog/2012/03/07/on-that-message-queue-dot-dot-dot">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,78 +63,107 @@ Mar 06 2012 &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">On That Message Queue...</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-07T06:21:00-03:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><p>&#8230;that you are trying to do with Redis, the answer is NO.</p>
 
-  
-  <h2>2012</h2>
+<p>Not by any issue with <a href="http://redis.io">Redis</a> (which I use in a lot of projects and it&#8217;s a fine piece of software), but because the primitives are not enough to pass as a message broker.</p>
 
-<article>
-  
-<h1><a href="/blog/2012/03/07/on-that-message-queue-dot-dot-dot/">On that message queue&#8230;</a></h1>
-<time datetime="2012-03-07T06:21:00-03:00" pubdate><span class='month'>Mar</span> <span class='day'>07</span> <span class='year'>2012</span></time>
+<p>Looking to Redis and <a href="http://www.zeromq.org">ZeroMQ</a> as a message broker in the classic ActiveMQ/RabbitMQ/RestMQ sense is naive, because both are transports (and in Redis case, persistence sometimes) and building blocks that can be attached to systems like these and libraries..</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/broker/'>broker</a>, <a class='category' href='/blog/categories/message-queue/'>message queue</a>, <a class='category' href='/blog/categories/redis/'>redis</a>, <a class='category' href='/blog/categories/restmq/'>restmq</a></span>
-</footer>
+<p>The regular drivers for Redis usually provides no reconnection in case of error or subscribe disconnect, so you probably might end up having your process hanging or if you are lucky, killed with an exception in case of a lost connection. The proper way to do it is to surround Redis with a management layer, as <a href="http://restmq.com">RestMQ</a> or Resque does.</p>
 
+<p>An interesting approach taken on the <a href="https://github.com/fiorix/txredisapi/">twisted redis client</a> is to make use of connection pools which can reconnect. That was the single feature that made RestMQ possible. <a href="https://github.com/ask/kombu">Kombu</a> connections follow the same pattern, abstracting fan outs and routes over a connection pool to Redis, the simples fallback in case you dont want to install any other complex message broker.</p>
 
-</article>
+<p>Applying only to pub/sub channels without fallback is not a good idea specially if you rely on multiple consumers. On the other hand, for simple one-time no-distributed-locks messaging (as with udp multicas or service discovery), it might be a good choice because: a) there is no persistence and b) if the transport is not available, the processes(or agents) are idle.</p>
 
+<p>The fine line here is the direction of the messages. In a exchange environment, the broker plays the good part of managing the transport shortcomings. On a fire and forget which the messages are importante, the broker helps to keep the message somewhere until it&#8217;s fetched. Fire and forget of disposable messages might be a good choice to do it if there is no immediate action to be taken and if there is some kind of retransmission/expiring on the sender part. Remember the SMTP protocol.</p>
 
-
-<article>
-  
-<h1><a href="/blog/2012/03/06/memcached-backend-engines/">memcached backend engines</a></h1>
-<time datetime="2012-03-06T14:31:00-03:00" pubdate><span class='month'>Mar</span> <span class='day'>06</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/backends/'>backends</a>, <a class='category' href='/blog/categories/filesystem/'>filesystem</a>, <a class='category' href='/blog/categories/memcached/'>memcached</a>, <a class='category' href='/blog/categories/redis/'>redis</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/03/04/agents-and-event-listeners-for-python/">Agents and Event Listeners for Python</a></h1>
-<time datetime="2012-03-04T19:03:00-03:00" pubdate><span class='month'>Mar</span> <span class='day'>04</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/agents/'>agents</a>, <a class='category' href='/blog/categories/gevent/'>gevent</a>, <a class='category' href='/blog/categories/kombu/'>kombu</a>, <a class='category' href='/blog/categories/message-queues/'>message queues</a>, <a class='category' href='/blog/categories/python/'>python</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/03/04/reimann-client-for-python/">Riemann client for python</a></h1>
-<time datetime="2012-03-04T18:34:00-03:00" pubdate><span class='month'>Mar</span> <span class='day'>04</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/insomnia/'>insomnia</a>, <a class='category' href='/blog/categories/protocol-buffer/'>protocol buffer</a>, <a class='category' href='/blog/categories/python/'>python</a>, <a class='category' href='/blog/categories/reimann/'>reimann</a></span>
-</footer>
-
-
-</article>
-
+<p>That&#8217;s not even touching the cases where a message queue is used as a kind of distributed lock where only one of many similar consumers might get a message, instead of a broadcast scenario.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Gleicon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-07T06:21:00-03:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/broker/'>broker</a>, <a class='category' href='/blog/categories/message-queue/'>message queue</a>, <a class='category' href='/blog/categories/redis/'>redis</a>, <a class='category' href='/blog/categories/restmq/'>restmq</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://gleicon.github.com/blog/2012/03/07/on-that-message-queue-dot-dot-dot/" data-via="gleicon" data-counturl="http://gleicon.github.com/blog/2012/03/07/on-that-message-queue-dot-dot-dot/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/06/memcached-backend-engines/" title="Previous Post: memcached backend engines">&laquo; memcached backend engines</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -230,7 +257,10 @@ Mar 06 2012 &hellip;">
       var disqus_shortname = 'gleicon';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://gleicon.github.com/blog/2012/03/07/on-that-message-queue-dot-dot-dot/';
+        var disqus_url = 'http://gleicon.github.com/blog/2012/03/07/on-that-message-queue-dot-dot-dot/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

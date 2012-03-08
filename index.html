@@ -9,7 +9,7 @@
   <meta name="author" content="Gleicon">
 
   
-  <meta name="description" content="The memcached protocol is very known and implemented on many languages and frameworks. Its primitives are based around getting and setting values &hellip;">
+  <meta name="description" content="&#8230;that you are trying to do with Redis, the answer is NO. Not by any issue with Redis (which I use in a lot of projects and it&#8217;s a fine &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +64,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/07/on-that-message-queue-dot-dot-dot/">On That Message Queue&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-07T06:21:00-03:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&#8230;that you are trying to do with Redis, the answer is NO.</p>
+
+<p>Not by any issue with <a href="http://redis.io">Redis</a> (which I use in a lot of projects and it&#8217;s a fine piece of software), but because the primitives are not enough to pass as a message broker.</p>
+
+<p>Looking to Redis and <a href="http://www.zeromq.org">ZeroMQ</a> as a message broker in the classic ActiveMQ/RabbitMQ/RestMQ sense is naive, because both are transports (and in Redis case, persistence sometimes) and building blocks that can be attached to systems like these and libraries..</p>
+
+<p>The regular drivers for Redis usually provides no reconnection in case of error or subscribe disconnect, so you probably might end up having your process hanging or if you are lucky, killed with an exception in case of a lost connection. The proper way to do it is to surround Redis with a management layer, as <a href="http://restmq.com">RestMQ</a> or Resque does.</p>
+
+<p>An interesting approach taken on the <a href="https://github.com/fiorix/txredisapi/">twisted redis client</a> is to make use of connection pools which can reconnect. That was the single feature that made RestMQ possible. <a href="https://github.com/ask/kombu">Kombu</a> connections follow the same pattern, abstracting fan outs and routes over a connection pool to Redis, the simples fallback in case you dont want to install any other complex message broker.</p>
+
+<p>Applying only to pub/sub channels without fallback is not a good idea specially if you rely on multiple consumers. On the other hand, for simple one-time no-distributed-locks messaging (as with udp multicas or service discovery), it might be a good choice because: a) there is no persistence and b) if the transport is not available, the processes(or agents) are idle.</p>
+
+<p>The fine line here is the direction of the messages. In a exchange environment, the broker plays the good part of managing the transport shortcomings. On a fire and forget which the messages are importante, the broker helps to keep the message somewhere until it&#8217;s fetched. Fire and forget of disposable messages might be a good choice to do it if there is no immediate action to be taken and if there is some kind of retransmission/expiring on the sender part. Remember the SMTP protocol.</p>
+
+<p>That&#8217;s not even touching the cases where a message queue is used as a kind of distributed lock where only one of many similar consumers might get a message, instead of a broadcast scenario.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -292,6 +342,10 @@ if __name__ == '__main__':
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/03/07/on-that-message-queue-dot-dot-dot/">On that message queue&#8230;</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/03/06/memcached-backend-engines/">memcached backend engines</a>
