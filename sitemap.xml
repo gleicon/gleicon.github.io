@@ -2,28 +2,38 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://gleicon.github.com/blog/2012/03/04/reimann-client-for-python/</loc>
-        <lastmod>2012-03-05T23:07:00-03:00</lastmod>
+        <lastmod>2012-06-07T22:51:26-03:00</lastmod>
     </url>
     <url>
         <loc>
             http://gleicon.github.com/blog/2012/03/04/agents-and-event-listeners-for-python/
         </loc>
-        <lastmod>2012-03-05T23:07:00-03:00</lastmod>
+        <lastmod>2012-06-07T22:51:26-03:00</lastmod>
     </url>
     <url>
         <loc>http://gleicon.github.com/blog/2012/03/06/memcached-backend-engines/</loc>
-        <lastmod>2012-03-07T06:20:23-03:00</lastmod>
+        <lastmod>2012-06-07T22:51:26-03:00</lastmod>
     </url>
     <url>
         <loc>http://gleicon.github.com/blog/2012/03/07/on-that-message-queue-dot-dot-dot/</loc>
-        <lastmod>2012-03-07T23:32:28-03:00</lastmod>
+        <lastmod>2012-06-07T22:51:26-03:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://gleicon.github.com/blog/2012/03/15/cyclone-a-twisted-based-tornado-implementation/
+        </loc>
+        <lastmod>2012-06-07T23:04:37-03:00</lastmod>
+    </url>
+    <url>
+        <loc>http://gleicon.github.com/blog/2012/06/07/python-and-gevent/</loc>
+        <lastmod>2012-06-07T23:36:12-03:00</lastmod>
     </url>
     <url>
         <loc>http://gleicon.github.com/blog/archives/</loc>
-        <lastmod>2012-03-07T23:32:28-03:00</lastmod>
+        <lastmod>2012-06-07T23:36:12-03:00</lastmod>
     </url>
     <url>
         <loc>http://gleicon.github.com/</loc>
-        <lastmod>2012-03-07T23:32:28-03:00</lastmod>
+        <lastmod>2012-06-07T23:36:12-03:00</lastmod>
     </url>
 </urlset>

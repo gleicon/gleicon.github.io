@@ -9,7 +9,7 @@
   <meta name="author" content="Gleicon">
 
   
-  <meta name="description" content="&#8230;that you are trying to do with Redis, the answer is NO. Not by any issue with Redis (which I use in a lot of projects and it&#8217;s a fine &hellip;">
+  <meta name="description" content="The last post took some time over cyclone and it wasn&#8217;t fair that I&#8217;ve mentioned gevent briefly. I&#8217;ve have been using this library &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://gleicon.github.com">
+  <link rel="canonical" href="http://gleicon.github.com/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,6 +76,196 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/07/python-and-gevent/">Python and GEvent</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-07T23:36:00-03:00" pubdate data-updated="true">Jun 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The last post took some time over <a href="http://cyclone.io">cyclone</a> and it wasn&#8217;t fair that I&#8217;ve mentioned gevent briefly. I&#8217;ve have been using this library both for quick prototypes, production code and system upgrades. It&#8217;s not an instant-evented-magic-to-crappy-code but it provides simple and solid primitives such as greenlets that enable the use of good libraries in a fashion manner.</p>
+
+<p>For instance, the great kombu library, which provides abstraction over different messaging protocols is not available to twisted. Worst yet, the txAMQP library is not straight forward to use. At the <a href="http://github.com/gleicon/mure">mure</a> project I wanted to come with a quick and simple agent network that communicated for a shared bus. I wasn&#8217;t worried about which kind of channel as long as I could prototype and run it quickly. It proved good because in short time I&#8217;ve implemented an EventEmitter clone inspired on node.js and a few days ago a bridge between python and node.js event emitters.</p>
+
+<p>It could be done using twisted but I would have to shave the yak related to a common multi broker messaging or stick to a single message broker. Not a problem if I had it clear from the start what I wanted it to be. But having gevent helped a lot to leverage the common blocking libraries and to use greenlets as a thread abstraction.</p>
+
+<figure class='code'><figcaption><span>mure/core.py </span><a href='https://github.com/gleicon/mure/blob/master/mure/core.py#L19-37'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'>    <span class="k">def</span> <span class="nf">add_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workername</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">[</span><span class="n">workername</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">def</span> <span class="nf">_listener</span><span class="p">():</span>
+</span><span class='line'>            <span class="n">qname</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">workername</span><span class="p">,</span> <span class="n">Exchange</span><span class="p">(</span><span class="s">&quot;exchange:</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">workername</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&#39;fanout&#39;</span><span class="p">))</span>
+</span><span class='line'>            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connected</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+</span><span class='line'>                <span class="k">print</span> <span class="s">&quot;waiting </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connected</span>
+</span><span class='line'>                <span class="n">gevent</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">with</span> <span class="n">BrokerConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_transport_url</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+</span><span class='line'>                <span class="k">with</span> <span class="n">conn</span><span class="o">.</span><span class="n">SimpleQueue</span><span class="p">(</span><span class="n">qname</span><span class="p">)</span> <span class="k">as</span> <span class="n">queue</span><span class="p">:</span>
+</span><span class='line'>                    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+</span><span class='line'>                        <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>                            <span class="n">message</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span class='line'>                            <span class="k">if</span> <span class="n">message</span><span class="p">:</span>
+</span><span class='line'>                                <span class="bp">self</span><span class="o">.</span><span class="n">_execute_callbacks</span><span class="p">(</span><span class="n">workername</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+</span><span class='line'>                                <span class="n">message</span><span class="o">.</span><span class="n">ack</span><span class="p">()</span>
+</span><span class='line'>                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connected</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span> <span class="k">break</span>
+</span><span class='line'>                        <span class="k">except</span><span class="p">:</span>
+</span><span class='line'>                            <span class="k">pass</span>
+</span><span class='line'>        <span class="n">gevent</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="n">_listener</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The last line spawn the function <em>_listener</em> which binds into an exchange queue. Each of these listeners take care of a communication channel and execute the callbacks associated to that worker name. Exchange, queue, worker are the samething applied in different contexts. These workers (@worker(&#8216;name_of_worker&#8217;)) are stored in a hash, each item a list of listeners. This spans out the messages around the right recipients.</p>
+
+<p>Another great gevent companion is <a href="http://bottlepy.org/">bottle</a>, a DSL for web programming. Its interface is clean and combining with gevent lets you quickly come with thin webservices interfaces. I&#8217;ve create an application called <a href="https://github.com/gleicon/uurl">uurl</a> - an url shortener, entirely based on gevent, bottle and readis. I&#8217;ve set to rewrite it from time to time, on different languages and frameworks to get a hang of their components and so far this is the cleanest implementation. It started as an WSGI service and later I&#8217;ve converted to gevent by simply changing servers, monkey patching all and using a redis connection pool.</p>
+
+<p>Monkey patching is a technique that bottle uses to convert the original socket, threads and other python modules to be non-blocking using its greenlets and I/O loop, in a way that the code change is minimal from a blocking application.</p>
+
+<figure class='code'><figcaption><span>uurl.py </span><a href='https://github.com/gleicon/uurl/blob/master/uurl.py#L120-125'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">GEventServerAdapter</span><span class="p">(</span><span class="n">ServerAdapter</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+</span><span class='line'>        <span class="kn">from</span> <span class="nn">gevent</span> <span class="kn">import</span> <span class="n">monkey</span>
+</span><span class='line'>        <span class="n">monkey</span><span class="o">.</span><span class="n">patch_socket</span><span class="p">()</span>
+</span><span class='line'>        <span class="kn">from</span> <span class="nn">gevent.wsgi</span> <span class="kn">import</span> <span class="n">WSGIServer</span>
+</span><span class='line'>        <span class="n">WSGIServer</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">),</span> <span class="n">handler</span><span class="p">)</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To close this post, I&#8217;d like to add that I usually compare this setup with Ruby/Sinatra/Thin. As a derivative of <a href="http://restmq.com">RestMQ</a> I&#8217;ve created <a href="https://github.com/gleicon/tinymq">TinyMQ</a> - a set of small implementations of RestMQ core ideas. This is a subject for another post but the whole message broker ran on less than 100 lines <a href="https://github.com/gleicon/tinymq/blob/master/python/tinymq.py">tinymq.py</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/15/cyclone-a-twisted-based-tornado-implementation/">Cyclone - a Twisted Based Tornado Implementation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-15T23:21:00-03:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Overview</h3>
+
+<p>Some time ago, a company called FriendFeed released <a href="http://www.tornadoweb.org/">Tornado</a>, a neat web application server for python. After some press and unquestionable results it was discussed whether it should have used the Twisted Framework foundation instead of implementing a new ioloop. Long history short, Tornado shares some similarities with <a href="http://twistedmatrix.com/trac/">Twisted</a>, but the programming API is better looking than twisted.web.</p>
+
+<p>After some trials by different people <a href="http://github.com/fiorix">Alex Fiori</a> forked Tornado and bundled it with a Twisted backend and some other goodies - calling it <a href="http://cyclone.io">cyclone</a>. After a while I started using it to build <a href="http://restmq.com">RestMQ</a> and started contributing code for WebSockets and other drivers. There is a lot of sense in combining both worlds as Twisted has an extensive ibrary of protocols and clients, a well defined programming model (like it or not, based on deferreds/futures and generators) and mature cross-platform ioloop implementation. Cyclone&#8217;s gettext implementation was merged back some time in the past and we constantly merge from upstream on interesting features.</p>
+
+<p>I do most of my coding in python splitting time between cyclone and gevent and right now I gotta say that cyclone has great features that compete in terms of productivity with Tornado.</p>
+
+<p>Code that is build on tornado will run easily after correcting the package names. On the parts related to ioloop, there are the same mapped functionality on twisted - such as timers and pools. To build new protocols you can leverage LineProtocol and other interesting tx classes. The best part is taking advantage of drivers. In an evented loop, if you use a regular driver that can block (pause while waiting for an answer from network or heavy calculation) the other operations are also halted.</p>
+
+<p>If you have a defined programming model to deal with it (which both tornado and twisted defined), it is a matter of yielding at the right moment or using a deferred return to realize the result of the operation later. That can lead to a kind of callback hell both for reading code and profiling it but there are few abstractions that will go far away from it.</p>
+
+<h3>Interesting Cyclone features</h3>
+
+<p><img src="images/cyclone_arch.png" title="Cyclone Architecture" ></p>
+
+<p>Tornado core (ioloop) was changed by a twisted based factory which yield the right reactor. Over this structure the protocol implementation and clients were adapted to use it with minimal to none interface changes.</p>
+
+<p>The most affected module initially was cyclone.web but the whole structure changed and got bundled drivers as mongodb, redis, sqlite and protocols as XMLRPC, JSONRPC, websockets and sse. There is an email module already which can serve as template-to-message app, based on TwistedMail. All these features are natively asynchronous.</p>
+
+<p>Beyond that, a cyclone app is a twisted protocol and can take advantage of the surrounding structure as plugins and PyDirector/cpu affinity. It was easy to merge or create due to the synergy based on already existing twisted applications. There is also an application skeleton and a minimal bottle.py DSL port - both allowing for quickstart web applications.</p>
+
+<p>Much of the authentication and authorization is done over decorators, allowing for clean code - along with the inline deferreds:</p>
+
+<pre><code>class IndexHandler(cyclone.web.RequestHandler):
+    @cyclone.web.authenticated  # triggers authentication
+    @defer.inlineCallbacks      # allows for inline callbacks
+    def get(self):
+        result = yield self.do_download()  # inline callback, no need to explicitly added 
+        self.write(result)
+</code></pre>
+
+<p>That alone may help on the callback spaghetti but it keeps being twisted.</p>
+
+<h3>Evented I/O intermission - is it faster ?</h3>
+
+<p>No. It&#8217;s just a choice of multiplexer to allow for better time utilization. It helps scaling better the same resources as other approaches such as greenlets over an evented loop (gevent). The most important thing to note is that they are not a substitute for threads of VM limitations. My setups usually are 1 or 2 instances per core, with affinity and a load balance in front of them. This can be done in a different manner as using threadpools or even processes.</p>
+
+<p>Last year I presented at Sao Paulo Perl Workshop and OSCon on this subject and the feedback that I got is that most of the time the very application gets complex so the matter of evented I/O ends up being one of the things that shapes these changes (for good or bad) but not the safeguard or guarantee that the quality will keep up.</p>
+
+<div class="embed rich SlideShare"><div style="width:425px" id="__ss_7883101"> <strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/gleicon/architecture-by-accident" title="Architecture by Accident" target="_blank">Architecture by Accident</a></strong> <iframe src="http://www.slideshare.net/slideshow/embed_code/7883101" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0" allowfullscreen></iframe> <div style="padding:5px 0 12px"> View more <a href="http://www.slideshare.net/" target="_blank">presentations</a> from <a href="http://www.slideshare.net/gleicon" target="_blank">gleicon</a> </div> </div></div>
+
+
+
+
+<div class="embed rich SlideShare"><div style="width:425px" id="__ss_8728812"> <strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/gleicon/oscon-performance-vs-scalability" title="OSCon - Performance vs Scalability" target="_blank">OSCon - Performance vs Scalability</a></strong> <iframe src="http://www.slideshare.net/slideshow/embed_code/8728812" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0" allowfullscreen></iframe> <div style="padding:5px 0 12px"> View more <a href="http://www.slideshare.net/thecroaker/death-by-powerpoint" target="_blank">PowerPoint</a> from <a href="http://www.slideshare.net/gleicon" target="_blank">gleicon</a> </div> </div></div>
+
+
+<h3>EOF</h3>
+
+<p>Check the <a href="https://github.com/fiorix/cyclone">code</a> and try it for yourself. I consider that using cyclone is a good and gentle intro to twisted as it sets a clear objective over web applications. There are plenty of good code at the demos directory and the app skeleton already comes up with a bootstrap.css based application boilerplate. Also, send patches.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -356,6 +546,14 @@ if __name__ == '__main__':
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/06/07/python-and-gevent/">Python and GEvent</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/15/cyclone-a-twisted-based-tornado-implementation/">Cyclone - a twisted based Tornado implementation</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/03/07/on-that-message-queue-dot-dot-dot/">On that message queue&#8230;</a>
       </li>
     
@@ -365,10 +563,6 @@ if __name__ == '__main__':
     
       <li class="post">
         <a href="/blog/2012/03/04/agents-and-event-listeners-for-python/">Agents and Event Listeners for Python</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/03/04/reimann-client-for-python/">Riemann client for python</a>
       </li>
     
   </ul>
