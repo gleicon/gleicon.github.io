@@ -4,7 +4,7 @@
   <title><![CDATA[Drinkin gasoline and wine]]></title>
   <link href="http://gleicon.github.com/atom.xml" rel="self"/>
   <link href="http://gleicon.github.com/"/>
-  <updated>2012-06-08T00:09:37-03:00</updated>
+  <updated>2012-07-22T22:33:43-03:00</updated>
   <id>http://gleicon.github.com/</id>
   <author>
     <name><![CDATA[Gleicon]]></name>
@@ -12,6 +12,118 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Porting an app from Tornado to Cyclone (quick defer.inlineCallbacks/yield primer)]]></title>
+    <link href="http://gleicon.github.com/blog/2012/07/22/porting-an-app-from-tornado-to-cyclone/"/>
+    <updated>2012-07-22T21:38:00-03:00</updated>
+    <id>http://gleicon.github.com/blog/2012/07/22/porting-an-app-from-tornado-to-cyclone</id>
+    <content type="html"><![CDATA[<p>Note: This will probably turn out in a screencast some time or another.</p>
+
+<p>To port an app from <a href="http://tornadoweb.org">Tornado</a> to <a href="http://cyclone.io">Cyclone</a> is an easy task. There are some quirks tho related to Twisted mainly. This is necessary so you can enjoy the environment and async drivers in a proper manner. Tornado is know to provide good abstractions so you can use regular drivers to hook into its IOLoop. But as event loop goes, most of them requires that the whole stack is aware of the cooperative nature between its components. By using twisted you already have that and bundled with cyclone you have Redis, MongoDB, SQLite and other drivers for applications and protocols.</p>
+
+<p>I&#8217;ve found a neat app called <a href="https://github.com/kumarnitin/RedisLive">RedisLive</a> and ported it to cyclone. It is basically a Redis real time resource monitor composed of two parts: a web interface and a daemon to collect data.</p>
+
+<p>To keep it simple and within a reasonable ammount of code to be explained I&#8217;ve just ported the web interface and created a separated data provider. I&#8217;ve started a twisted based metric collector that helped me to fix and add some missing pieces to cyclone redis driver but I wanted to stick with the original collector.</p>
+
+<p>I&#8217;ll walk out the main parts that were changed. The forked repository is at (my github)[https://github.com/gleicon/RedisLive]. There&#8217;s a full diff file inside my project.</p>
+
+<p>A good approach to port a web application from Tornado to Cyclone is to tackle the web section, and this is what I did. Inside the folder RedisLive/src/api/controller lives the Controllers for each route listed at RedisLive/src/redis-live.py. So starting by redis-live.py:</p>
+
+<pre><code>diff --git a/src/redis-live.py b/src/redis-live.py
+index 43479f4..9318c35 100755
+--- a/src/redis-live.py
++++ b/src/redis-live.py
+@@ -1,8 +1,8 @@
+ #! /usr/bin/env python
+
+-import tornado.ioloop
+-import tornado.options
+-import tornado.web
++from twisted.internet import reactor
++import cyclone.options
++import cyclone.web
+
+ from api.controller.BaseStaticFileHandler import BaseStaticFileHandler
+
+@@ -15,7 +15,7 @@ from api.controller.TopKeysController import TopKeysController
+
+
+ # Bootup
+-application = tornado.web.Application([
++application = cyclone.web.Application([
+   (r"/api/servers", ServerListController),
+   (r"/api/info", InfoController),
+   (r"/api/memory", MemoryController),
+@@ -27,6 +27,6 @@ application = tornado.web.Application([
+
+
+ if __name__ == "__main__":
+-   tornado.options.parse_command_line()
+-   application.listen(8888)
+-   tornado.ioloop.IOLoop.instance().start()
++  cyclone.options.parse_command_line()
++  reactor.listenTCP(8888, application, interface="127.0.0.1")                 
++  reactor.run()
+</code></pre>
+
+<p>Basically it turned into a simple twisted application (not a TAC tho). I&#8217;ve changed package names from tornado.* to cyclone.* and switched from tornado.ioloop to reactor.listenTCP()/reactor.run(). The routing and class structure is the same as we are going to see in the Controllers. Most of the changes are package change (from tornado.web to cyclone.web) and by surrounding the drivers call with yield/defer.inlineCallbacks/defer.returnValue.</p>
+
+<p>The regular way to call a method or function according to the twisted way(tm) is that you receive a Deferred class, in which you attach a callback for success and another for error. By using defer.* and yield code gets more readable without that many callbacks following each external call. The downside is that while you are using this decorator and returnValue, your function returns generators so it gets incompatible with normal functions. So you end up structuring your code around it to save time and in some places you got to stick to regular callbacks to make it compatible to libraries that are ported from a non-twisted code. Bikeshedding apart, is a good resource that Twisted provides.</p>
+
+<pre><code>diff --git a/src/api/controller/BaseStaticFileHandler.py b/src/api/controller/BaseStaticFileHandler.py
+index 162fa62..6343a53 100644
+--- a/src/api/controller/BaseStaticFileHandler.py
++++ b/src/api/controller/BaseStaticFileHandler.py
+@@ -1,6 +1,6 @@
+-import tornado.web
++import cyclone.web
+
+-class BaseStaticFileHandler(tornado.web.StaticFileHandler):
++class BaseStaticFileHandler(cyclone.web.StaticFileHandler):
+    def compute_etag(self):
+        return None
+</code></pre>
+
+<p>In this case we didn&#8217;t need to change anything beyond module names. Now a bit of defer/yield:</p>
+
+<pre><code>diff --git a/src/api/controller/CommandsController.py b/src/api/controller/CommandsController.py
+index cd9df26..ac046e3 100644
+--- a/src/api/controller/CommandsController.py
++++ b/src/api/controller/CommandsController.py
+@@ -1,12 +1,12 @@
+ from BaseController import BaseController
+-import tornado.ioloop
+-import tornado.web
+ import dateutil.parser
+ from datetime import datetime, timedelta
++from twisted.internet import defer
+
+
+ class CommandsController(BaseController):
+
++    @defer.inlineCallbacks
+     def get(self):
+         """Serves a GET request.
+         """
+@@ -45,7 +45,7 @@ class CommandsController(BaseController):
+           group_by = "second"
+
+         combined_data = []
+-        stats = self.stats_provider.get_command_stats(server, start, end,
++        stats = yield self.stats_provider.get_command_stats(server, start, end,
+                                                       group_by)
+         for data in stats:
+             combined_data.append([data[1], data[0]])
+</code></pre>
+
+<p>Note that before the &#8220;get&#8221; method we&#8217;ve added this decorator. If you are using other cyclone decorators, make sure this is the first one (for example if you are using cyclone.web.authenticated and so on). also when using the stats_provider, the call got prepended by yield so the decorator can capture the callback result and make it available to the variable stats without needing an explicit callback (stats = self.stats_provider(&#8230;).addCallback(lambda r: do_something(r))).</p>
+
+<p>The rest of diff is at the repository, lets examine the redis stats provider. To be able to keep the original data collector I&#8217;ve cloned RedisLive/src/dataprovider/redisprovider.py into txredisprovider.py. Cyclone comes with txredisapi bundled as a package and I&#8217;ve wanted to use w/o having to rewrite all the calculation code. Ideally I&#8217;d have changed the whole class and collector. Most of the changed were addition of yield/defer.inlineCallbacks and specifics of cyclone drivers as transactions (started by driver.multi() instead of pipeline).</p>
+
+<p>It was a quick job spread over two days (1h/2h each day) to have RedisLive working with cyclone, including the twisted part. Twisted is a very mature framework and it&#8217;s worth knowing the protocols it already provides. Also, the provided reactors and task primitives (look into redis-monitor-tx.tac) are useful to split heavy work into small tasks.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Python and GEvent]]></title>
@@ -135,12 +247,12 @@
 
 <p>Last year I presented at Sao Paulo Perl Workshop and OSCon on this subject and the feedback that I got is that most of the time the very application gets complex so the matter of evented I/O ends up being one of the things that shapes these changes (for good or bad) but not the safeguard or guarantee that the quality will keep up.</p>
 
-<div class="embed rich SlideShare"><div style="width:425px" id="__ss_7883101"> <strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/gleicon/architecture-by-accident" title="Architecture by Accident" target="_blank">Architecture by Accident</a></strong> <iframe src="http://www.slideshare.net/slideshow/embed_code/7883101" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0" allowfullscreen></iframe> <div style="padding:5px 0 12px"> View more <a href="http://www.slideshare.net/" target="_blank">presentations</a> from <a href="http://www.slideshare.net/gleicon" target="_blank">gleicon</a> </div> </div></div>
+<div class="embed rich SlideShare"><iframe src="http://www.slideshare.net/slideshow/embed_code/7883101" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/gleicon/architecture-by-accident" title="Architecture by Accident" target="_blank">Architecture by Accident</a> </strong> from <strong><a href="http://www.slideshare.net/gleicon" target="_blank">gleicon</a></strong> </div></div>
 
 
 
 
-<div class="embed rich SlideShare"><div style="width:425px" id="__ss_8728812"> <strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/gleicon/oscon-performance-vs-scalability" title="OSCon - Performance vs Scalability" target="_blank">OSCon - Performance vs Scalability</a></strong> <iframe src="http://www.slideshare.net/slideshow/embed_code/8728812" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0" allowfullscreen></iframe> <div style="padding:5px 0 12px"> View more <a href="http://www.slideshare.net/thecroaker/death-by-powerpoint" target="_blank">PowerPoint</a> from <a href="http://www.slideshare.net/gleicon" target="_blank">gleicon</a> </div> </div></div>
+<div class="embed rich SlideShare"><iframe src="http://www.slideshare.net/slideshow/embed_code/8728812" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/gleicon/oscon-performance-vs-scalability" title="OSCon - Performance vs Scalability" target="_blank">OSCon - Performance vs Scalability</a> </strong> from <strong><a href="http://www.slideshare.net/gleicon" target="_blank">gleicon</a></strong> </div></div>
 
 
 <h3>EOF</h3>
