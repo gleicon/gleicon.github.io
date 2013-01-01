@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ye Olde Devops notes and links - Drinkin gasoline and wine</title>
+  <meta name="author" content="Gleicon">
+
+  
+  <meta name="description" content="Note: this is an old post that I&#8217;ve had for months in my pipeline waiting for another project. late night chats with cv - intended to be &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://gleicon.github.com/blog/2013/01/01/ye-olde-devops-notes-and-links/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Drinkin gasoline and wine" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-23040217-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Drinkin gasoline and wine</a></h1>
+  
+    <h2>post zenmachine musings</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:gleicon.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ye Olde Devops Notes and Links</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-01T17:36:00-02:00" pubdate data-updated="true">Jan 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h4>Note: this is an old post that I&#8217;ve had for months in my pipeline waiting for another project.</h4>
+
+<h3>late night chats with cv - intended to be published somewhere at it&#8217;s never Lispus</h3>
+
+<p>This a summary of a gtalk chat on a deploy/keep it simple workflow w/o touching on devops or any other diatribes. Mostly interesting links and notes I&#8217;ve extracted from the chat history.</p>
+
+<p>@cv + @gleicon</p>
+
+<h3>using http and memcached as messaging protocols</h3>
+
+<ul>
+<li>clients everywhere</li>
+<li>sanitize following their rules (http timeouts/memcached keys)</li>
+<li>they are not transports so short messages</li>
+<li>pool strategies (more than one connection)</li>
+<li>reconnect strategies</li>
+</ul>
+
+
+<h3>using lxc and rootfs images</h3>
+
+<ul>
+<li>rootfs can run on KVM and LXC (probably vbox ?)</li>
+<li>vagrant/simplestack to interface to local/external VMs (would need to patch vagrant, etc)</li>
+<li>use ubuntu/whatever new image with all bundled software</li>
+</ul>
+
+
+<h3>package when tagged</h3>
+
+<ul>
+<li>bricklayer/fpm/rpmbuild/etc</li>
+<li>deploy images around before committing to production release</li>
+<li>no need for conf management if the image is already loaded</li>
+</ul>
+
+
+<h3>good images</h3>
+
+<ul>
+<li>new software</li>
+<li>redis/memcached up and running at localhost</li>
+<li>few configuration items (localhost or ENV var)</li>
+<li>use buildpacks</li>
+<li>bake images with packaged + tagged production version, distribute over nginx</li>
+</ul>
+
+
+<h3>deploy</h3>
+
+<ul>
+<li>fetch images</li>
+<li>deploy on VMs/LXC</li>
+<li>instrument images with watchdog agent</li>
+<li>messages over queue/http queue/pubsub</li>
+<li>one server lost -> spin new server</li>
+<li>loadbalancer ?</li>
+<li>monitoring: riemann for real distributed stuff/uptime for local</li>
+</ul>
+
+
+<h3>links</h3>
+
+<ul>
+<li>https://github.com/cv/escape-server-config (config server management)</li>
+<li>https://github.com/locaweb/bricklayer (packaging app server)</li>
+<li>http://www.stgraber.org/2012/03/04/booting-an-ubuntu-12-04-virtual-machine-in-an-lxc-container/ (linux containers)</li>
+<li>https://github.com/locaweb/simplestack (hypervisor api)</li>
+<li>http://vagrantup.com/</li>
+<li>http://blog.heroku.com/archives/2012/7/17/buildpacks/</li>
+<li>https://github.com/ddollar/mason (buildpack automation)</li>
+<li>https://github.com/peterkeen/dokuen (mini paas)</li>
+<li>https://github.com/ddollar/foreman (app control)</li>
+<li>https://github.com/fzaninotto/uptime (uptime monitoring)</li>
+<li>http://www.openresty.org/ (nginx +lua + redis dynamic vhost)</li>
+<li>http://graylog2.org/</li>
+<li>https://github.com/locaweb/logix (graylog2 syslog -> amqp for graylog2)</li>
+<li>https://github.com/gleicon/python_dns_servers (possible dynamic dns)&#8217;</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Gleicon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-01T17:36:00-02:00" pubdate data-updated="true">Jan 1<span>st</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/deployment/'>deployment</a>, <a class='category' href='/blog/categories/devops-/'>devops,</a>, <a class='category' href='/blog/categories/images-/'>images,</a>, <a class='category' href='/blog/categories/linux-/'>linux,</a>, <a class='category' href='/blog/categories/memcached-/'>memcached,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://gleicon.github.com/blog/2013/01/01/ye-olde-devops-notes-and-links/" data-via="gleicon" data-counturl="http://gleicon.github.com/blog/2013/01/01/ye-olde-devops-notes-and-links/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/01/01/tab-sink-for-the-end-of-2012/" title="Previous Post: Tab sink for the end of 2012">&laquo; Tab sink for the end of 2012</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/01/01/metrics/" title="Next Post: Metrics">Metrics &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/01/metrics/">Metrics</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/01/ye-olde-devops-notes-and-links/">Ye Olde Devops notes and links</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/01/tab-sink-for-the-end-of-2012/">Tab sink for the end of 2012</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/22/porting-an-app-from-tornado-to-cyclone/">Porting an app from Tornado to Cyclone (quick defer.inlineCallbacks/yield primer)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/07/python-and-gevent/">Python and GEvent</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/gleicon">@gleicon</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'gleicon',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("gleicon", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/gleicon" class="twitter-follow-button" data-show-count="false">Follow @gleicon</a>
+  
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Gleicon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'gleicon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://gleicon.github.com/blog/2013/01/01/ye-olde-devops-notes-and-links/';
+        var disqus_url = 'http://gleicon.github.com/blog/2013/01/01/ye-olde-devops-notes-and-links/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

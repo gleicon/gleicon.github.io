@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: devops, | Drinkin gasoline and wine]]></title>
+  <link href="http://gleicon.github.com/blog/categories/devops-/atom.xml" rel="self"/>
+  <link href="http://gleicon.github.com/"/>
+  <updated>2013-01-01T18:11:42-02:00</updated>
+  <id>http://gleicon.github.com/</id>
+  <author>
+    <name><![CDATA[Gleicon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ye Olde Devops notes and links]]></title>
+    <link href="http://gleicon.github.com/blog/2013/01/01/ye-olde-devops-notes-and-links/"/>
+    <updated>2013-01-01T17:36:00-02:00</updated>
+    <id>http://gleicon.github.com/blog/2013/01/01/ye-olde-devops-notes-and-links</id>
+    <content type="html"><![CDATA[<h4>Note: this is an old post that I've had for months in my pipeline waiting for another project.</h4>
+
+<h3>late night chats with cv - intended to be published somewhere at it's never Lispus</h3>
+
+<p>This a summary of a gtalk chat on a deploy/keep it simple workflow w/o touching on devops or any other diatribes. Mostly interesting links and notes I've extracted from the chat history.</p>
+
+<p>@cv + @gleicon</p>
+
+<h3>using http and memcached as messaging protocols</h3>
+
+<ul>
+<li>clients everywhere</li>
+<li>sanitize following their rules (http timeouts/memcached keys)</li>
+<li>they are not transports so short messages</li>
+<li>pool strategies (more than one connection)</li>
+<li>reconnect strategies</li>
+</ul>
+
+
+<h3>using lxc and rootfs images</h3>
+
+<ul>
+<li>rootfs can run on KVM and LXC (probably vbox ?)</li>
+<li>vagrant/simplestack to interface to local/external VMs (would need to patch vagrant, etc)</li>
+<li>use ubuntu/whatever new image with all bundled software</li>
+</ul>
+
+
+<h3>package when tagged</h3>
+
+<ul>
+<li>bricklayer/fpm/rpmbuild/etc</li>
+<li>deploy images around before committing to production release</li>
+<li>no need for conf management if the image is already loaded</li>
+</ul>
+
+
+<h3>good images</h3>
+
+<ul>
+<li>new software</li>
+<li>redis/memcached up and running at localhost</li>
+<li>few configuration items (localhost or ENV var)</li>
+<li>use buildpacks</li>
+<li>bake images with packaged + tagged production version, distribute over nginx</li>
+</ul>
+
+
+<h3>deploy</h3>
+
+<ul>
+<li>fetch images</li>
+<li>deploy on VMs/LXC</li>
+<li>instrument images with watchdog agent</li>
+<li>messages over queue/http queue/pubsub</li>
+<li>one server lost -> spin new server</li>
+<li>loadbalancer ?</li>
+<li>monitoring: riemann for real distributed stuff/uptime for local</li>
+</ul>
+
+
+<h3>links</h3>
+
+<ul>
+<li>https://github.com/cv/escape-server-config (config server management)</li>
+<li>https://github.com/locaweb/bricklayer (packaging app server)</li>
+<li>http://www.stgraber.org/2012/03/04/booting-an-ubuntu-12-04-virtual-machine-in-an-lxc-container/ (linux containers)</li>
+<li>https://github.com/locaweb/simplestack (hypervisor api)</li>
+<li>http://vagrantup.com/</li>
+<li>http://blog.heroku.com/archives/2012/7/17/buildpacks/</li>
+<li>https://github.com/ddollar/mason (buildpack automation)</li>
+<li>https://github.com/peterkeen/dokuen (mini paas)</li>
+<li>https://github.com/ddollar/foreman (app control)</li>
+<li>https://github.com/fzaninotto/uptime (uptime monitoring)</li>
+<li>http://www.openresty.org/ (nginx +lua + redis dynamic vhost)</li>
+<li>http://graylog2.org/</li>
+<li>https://github.com/locaweb/logix (graylog2 syslog -> amqp for graylog2)</li>
+<li>https://github.com/gleicon/python_dns_servers (possible dynamic dns)'</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Tab sink for the end of 2012]]></title>
+    <link href="http://gleicon.github.com/blog/2013/01/01/tab-sink-for-the-end-of-2012/"/>
+    <updated>2013-01-01T17:35:00-02:00</updated>
+    <id>http://gleicon.github.com/blog/2013/01/01/tab-sink-for-the-end-of-2012</id>
+    <content type="html"><![CDATA[<h4>Note: this is an old post that I've had for months in my pipeline waiting for another project</h4>
+
+<h4>The tab sink for the end of 2012 (originally I started this post Oct 20 2012)</h4>
+
+<p>Most of these stuff were on my tabs for the whole week (and even weeks before that) and just now I managed to filter and check them.</p>
+
+<ul>
+<li><p>Last month the Surge conference happened (http://omniti.com/surge/2012) with a lot of goodies. This week the videos were published and there's lots of good stuff. I can highlight two examples (not that the other are not good):</p>
+
+<p>  <a href="http://omniti.com/surge/2012/speakers/bergman_artur">Arthur Bergman and Mysteries of a CDN explained (Fastly)</a></p>
+
+<p>  <a href="http://omniti.com/surge/2012/speakers/canahuati_pedro">Pedro Canahuati and Operating at Scale (Facebook)</a></p></li>
+<li><p>A distributed counter from basho, presented at <a href="http://basho.com/community/ricon2012/">RICON</a>: <a href="https://github.com/basho/riak_dt">riak_dt</a>. I think the videos are on the way. I've watched it through live streaming. Good stuff all around.</p></li>
+<li><p>Still on conferences, it seems like <a href="http://monitorama.com/#speakers">Monitorama</a> will be interesting. There's lot on monitoring to be said - less on tools more on doing the smart things. (This presentation )[https://speakerdeck.com/u/obfuscurity/p/the-state-of-open-source-monitoring] from @obfuscurity is a great review and starting point. Fuck nagios.</p></li>
+<li><p>Make sure to review (Agile Data)[http://ofps.oreilly.com/titles/9781449326265/index.html] from Russel Jurney - although I always associeate "Agile" with bikeshedding this is only on the title and the book means it. From Chapter 2 on you will find practical examples on data analysis. The pieces on email are very interesting.</p></li>
+<li><p>Sketching data structures are summaries of structures that otherwise would take a lot of space/time to process. <a href="http://lkozma.net/blog/sketching-data-structures/">This review</a> takes on Bloom Filters and Count-Min structures in a very clear manner. Be the smart guy in your local bikeshedding meeting by throwing away a "well we've had webscale data so I've reimplemented my indexes as count-min just for fun".</p></li>
+<li><p>A series from Performance Dynamics on Little's Law and I/O performance <a href="http://perfdynamics.blogspot.com.br/2012/08/littles-law-and-io-performance.html">here</a> and <a href="http://perfdynamics.blogspot.com.br/2012/01/throughput-delay-curves.html">here</a> plus a piece on <a href="http://perfdynamics.blogspot.com.br/2010/03/bandwidth-vs-latency-world-is-curved.html">bandwidth vs latency</a>. Let's get educated.</p></li>
+<li><p>A piece on <a href="http://markorodriguez.com/2011/09/22/a-graph-based-movie-recommender-engine/">graph based recommendation engine</a> using neo4j. Worth the exercise, this might help on event correlation too (same principle but diff techniques to relate cluster of data).</p></li>
+<li><p><a href="http://notes.ceondo.com/mongrel2-zmq-paas/">A private PaaS with Mongrel2 and ZeroMQ</a> odd but very complete. I've tried with mixed results but can see the reasoning on extending mongrel2 to do it.</p></li>
+<li><p>Still on PaaS <a href="http://blog.nonuby.com/blog/2012/07/02/what-happens-when-you-push-to-heroku/">What happens when you push to heroku</a> and <a href="https://github.com/openruko/">openruko github repo</a> are full of awesome by @nonuby</p></li>
+<li><p><a href="https://github.com/dotcloud/hipache">hipache</a> is a http and ws proxy/router. These things are the heart of a PaaS. I'd love to see it as a nginx module. It's doable with openresty but involves lua and other modules. From the great @dotcloud team.</p></li>
+<li><p>We've started this year a series of techtalks at (http://www.locaweb.com.br) to spread the knowledge and create a sense of community inside the company. <a href="https://github.com/mediacore/mediacore-community">Mediacore</a> was our platform of choice to manage the videos. Yeah, create your own youtube etc.</p></li>
+<li><p>Jeez I dont even.... <a href="http://browserver.org/">browserver</a> - it works, but oh god why :D nice code and concept, I wish it was torrent so we could p2p between browsers nearby.</p></li>
+</ul>
+
+
+<p>Keep tuned. This list is bound to get back as soon as I clog my browser with tabs again ((anytime between one weekend/2 weeks)). Cheers.</p>
+]]></content>
+  </entry>
+  
+</feed>

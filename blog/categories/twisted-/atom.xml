@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: twisted, | Drinkin gasoline and wine]]></title>
+  <link href="http://gleicon.github.com/blog/categories/twisted-/atom.xml" rel="self"/>
+  <link href="http://gleicon.github.com/"/>
+  <updated>2013-01-01T18:11:42-02:00</updated>
+  <id>http://gleicon.github.com/</id>
+  <author>
+    <name><![CDATA[Gleicon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Metrics]]></title>
+    <link href="http://gleicon.github.com/blog/2013/01/01/metrics/"/>
+    <updated>2013-01-01T18:04:00-02:00</updated>
+    <id>http://gleicon.github.com/blog/2013/01/01/metrics</id>
+    <content type="html"><![CDATA[<p>This holiday I've released two new projects at my github repository: PyMetrics and TxMetrics. There are metrics libraries inspired by Coda Hale's Metric project [http://metrics.codahale.com/]. Although not that complete, I've ported what I feel that I was repeating myself in my projects and what I lacked to python and the twisted framework.</p>
+
+<p>Some months ago, I've ported a <a href="https://github.com/gleicon/py_descriptive_statistics">descriptive stats library to python</a> and also integrated it into PyMetrics and TxMetrics. These libraries are backed by redis and I intend to release a port to ruby using the same underlying data structures.</p>
+
+<p>Most of the applications have at least one form of counter spread around it. My intention was to use the same semantic for these situations and also introduce new ways to measure data that is not bound to standard monitoring software extracting data from TCP ports or log files.</p>
+
+<p>The difference between them is that I've had to port the tradicional python approach to twisted using the deferred constructs and another library that I contribute to, txredisapi.</p>
+
+<p>With these libraries you can extract data realtime from your application and go from monitoring to dashboards, which is the next step I'm planning with the ruby client: to integrate with <a href="https://github.com/Shopify/dashing">Dashing</a></p>
+
+<p>Links:</p>
+
+<ul>
+<li><a href="https://github.com/gleicon/txmetrics">TxMetrics</a></li>
+<li><a href="https://github.com/gleicon/pymetrics">PyMetrics</a></li>
+<li><a href="https://github.com/gleicon/py_descriptive_statistics">Python Descriptive Statistics</a></li>
+<li><a href="https://github.com/fiorix/txredisapi">TxRedisAPI</a></li>
+<li><a href="https://github.com/Shopify/dashing">Dashing</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
