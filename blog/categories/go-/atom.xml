@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: go, | Drinkin gasoline and wine]]></title>
+  <link href="http://gleicon.github.com/blog/categories/go-/atom.xml" rel="self"/>
+  <link href="http://gleicon.github.com/"/>
+  <updated>2013-09-25T15:43:23-03:00</updated>
+  <id>http://gleicon.github.com/</id>
+  <author>
+    <name><![CDATA[Gleicon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[tab sink for sept 2013]]></title>
+    <link href="http://gleicon.github.com/blog/2013/09/24/tab-sink-for-sept-2013/"/>
+    <updated>2013-09-24T17:33:00-03:00</updated>
+    <id>http://gleicon.github.com/blog/2013/09/24/tab-sink-for-sept-2013</id>
+    <content type="html"><![CDATA[<h3>Tab sink (or all that I've stuck on OneTab plus 40+ tabs on 3 browser windows)</h3>
+
+<h4>Tools</h4>
+
+<ul>
+<li>http://www.cis.upenn.edu/~bcpierce/unison/ - bilateral, multi-os file transfer</li>
+<li>http://stackoverflow.com/questions/8650031/update-a-git-repository-through-a-git-hook-in-python</li>
+<li>http://www.jackosx.com/ - Jack audio connector for mac os X (intercepts/reroute audio)</li>
+<li>http://www.icecast.org/</li>
+<li>http://butt.sourceforge.net/ - MacOS X encoder for icecast</li>
+</ul>
+
+
+<h4>Go</h4>
+
+<ul>
+<li>https://github.com/miekg/gobook - Golang Book</li>
+<li>http://www.goworker.org/ - resque compatible Go implementation. Screw up what is already doomed by design</li>
+<li>https://github.com/golang/groupcache - power up that cache</li>
+<li>https://github.com/goraft/raft - raft consensus protocol</li>
+<li>https://github.com/stathat/consistent/ - stathat's consistent hash library that I'm using on go-redis</li>
+<li>http://www.gocircuit.org/vena.html - substitute for OpenTSDB using Go and Leveldb</li>
+<li>http://www.tamber.com/posts/ferret.html - search engine</li>
+<li>http://www.goinggo.net/2013/09/running-go-programs-in-ironworker.html</li>
+</ul>
+
+
+<h4>Python and machine learning</h4>
+
+<ul>
+<li>https://github.com/sloria/TextBlob - PoS tagging, Sentiment analysis in python</li>
+<li>https://textblob.readthedocs.org/en/latest/ - textblob docs</li>
+<li>http://textblob-api-1743413701.us-east-1.elb.amazonaws.com/index.html - TextBlob demo</li>
+</ul>
+
+
+<h4>Load test / http traffic visualisation</h4>
+
+<ul>
+<li>https://github.com/andrewvc/engulf | andrewvc/engulf · GitHub</li>
+<li>https://github.com/mnot/htracr/ | mnot/htracr</li>
+<li>http://mnot.github.io/redbot/ | mnot/redbot @ GitHub</li>
+</ul>
+
+
+<h4>Message queue/brokers</h4>
+
+<ul>
+<li>https://github.com/tef/botox | tef/botox - SQS clone</li>
+<li>http://blog.thoonk.com/ - data schema for job and message queues</li>
+</ul>
+
+
+<h4>Data mining code and Q&amp;A repositories</h4>
+
+<ul>
+<li>https://bigquery.cloud.google.com/table/publicdata:samples.github_timeline?pli=1 | Google BigQuery</li>
+<li>http://docs.libsaas.net/en/latest/generated/github/ | GitHub — libsaas 0.1 documentation</li>
+<li>http://paulmillr.com/posts/github-pull-request-stats/ | Paul Miller — Your pull request won’t be accepted</li>
+<li>http://blog.stackoverflow.com/category/cc-wiki-dump/ | cc-wiki-dump « Blog – Stack Exchange</li>
+<li>http://www.brentozar.com/archive/2010/02/querying-the-stackoverflow-data-dump/ | Querying the StackOverflow Data Dump | Brent Ozar Unlimited</li>
+<li>http://data.stackexchange.com/stackoverflow/query/edit/119630 | Query Stack Overflow - Stack Exchange Data Explorer</li>
+<li>http://meta.stackoverflow.com/questions/2677/database-schema-documentation-for-the-public-data-dump-and-data-explorer | Database schema documentation for the public data dump and Data Explorer - Meta Stack Overflow</li>
+<li>https://github.com/es-analysis/plato</li>
+<li>http://meta.stackoverflow.com/questions/159715/should-i-answer-my-questions-that-were-refused-by-community | Should I answer my questions that were refused by community? - Meta Stack Overflow</li>
+<li>http://meta.stackoverflow.com/questions/10582/what-is-a-closed-question | What is a "closed" question? - Meta Stack Overflow</li>
+</ul>
+
+
+<h4>Email layouts/tools/servers</h4>
+
+<ul>
+<li>http://purecss.io/layouts/email/ | Pure</li>
+<li>https://github.com/lamoanh/gmail_skin | lamoanh/gmail_skin · GitHub</li>
+<li>http://notmuchmail.org/ | notmuch</li>
+<li>https://github.com/teythoon/afew | teythoon/afew</li>
+<li>http://lamsonproject.org/ | LamsonProject: Lamson The Python Mail Server</li>
+</ul>
+
+
+<h4>Chart libraries/Browser side libraries</h4>
+
+<ul>
+<li>https://github.com/skorulis/stork | skorulis/stork - export canvas drawing to PNG</li>
+<li>https://github.com/mher/chartkick.py | mher/chartkick.py - create js charts from python</li>
+<li>https://github.com/flot/flot/blob/master/API.md | flot/API.md at master · flot/flot · GitHub</li>
+<li>http://blog.videojs.com/ | Video.js Blog - Video.js is a JavaScript framework for HTML5 and Flash video</li>
+<li>http://www.google.com/tagmanager/ | Google Tag Manager official website</li>
+<li>https://togetherjs.com/ - collaboration library by Mozilla</li>
+</ul>
+
+
+<h4>Geolocation, topology and libraries</h4>
+
+<ul>
+<li>http://leafletjs.com/ - Mobile friend OSS interactive maps</li>
+<li>http://www.geojson.org/geojson-spec.html - geospatial data interchange format</li>
+<li>https://github.com/topojson/topojson-specification/blob/master/README.md - topological data format spec</li>
+<li>https://help.github.com/articles/mapping-geojson-files-on-github - GEOJson on Github</li>
+</ul>
+
+
+<h4>PaaS</h4>
+
+<ul>
+<li>https://github.com/dyndrop | dyndrop (Dyndrop)</li>
+<li>http://nick.stinemat.es/#continuous-deployment | Automation Blog - Nick Stinemates</li>
+<li>http://codeascraft.com/2013/09/23/lxc-running-14000-tests-per-day-and-beyond-part-1/#!</li>
+<li>http://osv.io/ - JVM over hypervisor</li>
+<li>https://github.com/eugeneware/docker-wordpress-nginx - Docker + nginx + wordpress</li>
+<li>https://github.com/jbfink/docker-wordpress - docker and wordpress</li>
+</ul>
+
+
+<h4>Ping latency data reports</h4>
+
+<ul>
+<li>http://www-iepm.slac.stanford.edu/pinger/ | PingER (Ping End-to-end Reporting)</li>
+<li>http://www-iepm.slac.stanford.edu/pinger/explorer.html | PingER Data Explorer</li>
+<li>http://www.google.com/publicdata/explore?ds=nc650op6n4i1l_&amp;ctype=m&amp;strail=false&amp;bcs=d&amp;nselm=s&amp;met_c=minimum_rtt&amp;met_s=population&amp;ifdim=country&amp;tunit=Y&amp;pit=1320217200000&amp;uniSize=0.03500000000000001&amp;mapType=t&amp;yMax=64.1826&amp;xMin=-175.1992&amp;xMax=179.1992&amp;iconSize=0.5&amp;icfg&amp;yMin=-41.4648 | Pinger Visual Landscape - Google Public Data Explorer</li>
+</ul>
+
+
+<h4>Monitoring, analytics</h4>
+
+<ul>
+<li>https://speakerdeck.com/christineyen/gluecon-2013-think-backwards-realtime-analytics-plus-cassandra | GlueCon 2013 - Think Backwards: Realtime Analytics + Cassandra // Speaker Deck</li>
+<li>https://github.com/snowplow/snowplow/wiki/Technical-architecture - Snowplow analytics (hadoop, redshift)</li>
+<li>https://speakerdeck.com/auxesis/the-psychology-of-alert-design</li>
+<li>https://speakerdeck.com/astanway/mom-my-algorithms-suck - nice prezo on models vs monitoring</li>
+<li>https://conf-slac.stanford.edu/xldb-2013/sites/conf-slac.stanford.edu.xldb-2013/files/RaviMurthy_Facebook_Tues_xldb_analytics_infra_2013.pdf</li>
+</ul>
+
+
+<h4>Metrics and statistics</h4>
+
+<ul>
+<li>http://en.wikipedia.org/wiki/Apdex | Apdex - Wikipedia, the free encyclopedia</li>
+<li>http://www.joyent.com/blog/visualizations-for-outliers-and-multi-modal-latency - series of articles on outliers and latency visualisation</li>
+</ul>
+
+
+<h4>Automated browser testing</h4>
+
+<ul>
+<li>https://github.com/ryanseddon/bunyip | ryanseddon/bunyip · GitHub</li>
+<li>https://forwardhq.com/# | Share localhost over the Web — Forward</li>
+</ul>
+
+
+<h4>Real world accidents</h4>
+
+<ul>
+<li>http://roc.cs.berkeley.edu/294fall01/slides/Tetzlaff.pdf | roc.cs.berkeley.edu/294fall01/slides/Tetzlaff.pdf</li>
+<li>http://en.wikipedia.org/wiki/Three_Mile_Island_accident | Three Mile Island accident - Wikipedia, the free encyclopedia</li>
+<li>http://en.wikipedia.org/wiki/Alaska_Airlines_Flight_261 | Alaska Airlines Flight 261 - Wikipedia, the free encyclopedia</li>
+<li>https://www.ntsb.gov/investigations/summary/AAR0201.html | Aircraft Accident Report: AAR-02-01</li>
+</ul>
+
+
+<h4>DHT, torrent, distributed system</h4>
+
+<ul>
+<li>http://btsync.s3-website-us-east-1.amazonaws.com/BitTorrentSyncUserGuide.pdf | btsync.s3-website-us-east-1.amazonaws.com/BitTorrentSyncUserGuide.pdf</li>
+<li>http://engineering.bittorrent.com/2013/01/22/bittorrent-tech-talks-dht/ | BitTorrent Tech Talks: DHT | The BitTorrent Engineering Blog</li>
+<li>http://labs.bittorrent.com/experiments/sync/technology.html | BitTorrent Labs</li>
+<li>http://www.iis.sinica.edu.tw/page/jise/2006/200609_16.pdf - A Fault-Tolerant Protocol for Generating Sequence Numbers for Total Ordering Group Communication in Distributed Systems</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

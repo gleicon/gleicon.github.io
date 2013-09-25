@@ -4,7 +4,7 @@
   <title><![CDATA[Category: message queues | Drinkin gasoline and wine]]></title>
   <link href="http://gleicon.github.com/blog/categories/message-queues/atom.xml" rel="self"/>
   <link href="http://gleicon.github.com/"/>
-  <updated>2013-01-01T18:19:16-02:00</updated>
+  <updated>2013-09-25T15:43:23-03:00</updated>
   <id>http://gleicon.github.com/</id>
   <author>
     <name><![CDATA[Gleicon]]></name>
@@ -88,7 +88,7 @@ def main():
 if __name__ == &quot;__main__&quot;:                                                      
     main()</code></pre></noscript></div>
 
-<img src=http://localhost:8080/track?_id=1 width=1 height=1></p>
+<img src=?_id=1 width=1 height=1></p>
 ]]></content>
   </entry>
   
